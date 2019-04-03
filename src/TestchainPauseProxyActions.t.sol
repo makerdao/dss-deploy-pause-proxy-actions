@@ -3,19 +3,43 @@ pragma solidity ^0.5.6;
 import "ds-test/test.sol";
 
 import "./TestchainPauseProxyActions.sol";
+import {DssDeployTestBase} from "dss-deploy/DssDeploy.t.base.sol";
+import {DSProxyFactory, DSProxy} from "ds-proxy/proxy.sol";
 
-contract TestchainPauseProxyActionsTest is DSTest {
-    TestchainPauseProxyActions actions;
+contract ProxyCalls {
+    DSProxy proxy;
+    address proxyLib;
 
+    function file(address, address, address, bytes32, uint256) public {
+        proxy.execute(proxyLib, msg.data);
+    }
+
+    function file(address, address, address, bytes32, bytes32, uint256) public {
+        proxy.execute(proxyLib, msg.data);
+    }
+}
+
+contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
     function setUp() public {
-        actions = new TestchainPauseProxyActions();
+        super.setUp();
+        deploy();
+        DSProxyFactory factory = new DSProxyFactory();
+        proxyLib = address(new TestchainPauseProxyActions());
+        proxy = DSProxy(factory.build());
+        authority.setRootUser(address(proxy), true);
     }
 
-    function testFail_basic_sanity() public {
-        assertTrue(false);
+    function testFile() public {
+        assertEq(vat.Line(), 10000 * 10 ** 45);
+        this.file(address(pause), address(plan), address(vat), bytes32("Line"), uint(20000 * 10 ** 45));
+        assertEq(vat.Line(), 20000 * 10 ** 45);
     }
 
-    function test_basic_sanity() public {
-        assertTrue(true);
+    function testFile2() public {
+        (,,, uint line,) = vat.ilks("ETH");
+        assertEq(line, 10000 * 10 ** 45);
+        this.file(address(pause), address(plan), address(vat), bytes32("ETH"), bytes32("line"), uint(20000 * 10 ** 45));
+        (,,, line,) = vat.ilks("ETH");
+        assertEq(line, 20000 * 10 ** 45);
     }
 }
