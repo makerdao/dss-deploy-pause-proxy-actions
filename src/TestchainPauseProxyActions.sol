@@ -22,6 +22,17 @@ contract PauseLike {
     function exec(address, bytes memory, uint) public;
 }
 
+contract ActionChangeDelay {
+    address a;
+    address o;
+    mapping (bytes32 => bool) public p;
+    uint public delay;
+
+    function changeDelay(uint newDelay) public {
+        delay = newDelay;
+    }
+}
+
 contract TestchainPauseProxyActions {
     function file(address pause, address plan, address who, bytes32 what, uint256 data) external {
         PauseLike(pause).plan(address(plan), abi.encodeWithSignature("file(address,bytes32,uint256)", who, what, data), now);
@@ -31,5 +42,10 @@ contract TestchainPauseProxyActions {
     function file(address pause, address plan, address who, bytes32 ilk, bytes32 what, uint256 data) external {
         PauseLike(pause).plan(address(plan), abi.encodeWithSignature("file(address,bytes32,bytes32,uint256)", who, ilk, what, data), now);
         PauseLike(pause).exec(address(plan), abi.encodeWithSignature("file(address,bytes32,bytes32,uint256)", who, ilk, what, data), now);
+    }
+
+    function changeDelay(address pause, address plan, uint newDelay) external {
+        PauseLike(pause).plan(address(plan), abi.encodeWithSignature("changeDelay(uint256)", newDelay), now);
+        PauseLike(pause).exec(address(plan), abi.encodeWithSignature("changeDelay(uint256)", newDelay), now);
     }
 }
