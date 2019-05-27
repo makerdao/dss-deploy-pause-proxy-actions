@@ -18,7 +18,7 @@ contract ProxyCalls {
         proxy.execute(proxyLib, msg.data);
     }
 
-    function changeDelay(address, address, uint) public {
+    function setDelay(address, address, uint) public {
         proxy.execute(proxyLib, msg.data);
     }
 }
@@ -35,21 +35,21 @@ contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
 
     function testFile() public {
         assertEq(vat.Line(), 10000 * 10 ** 45);
-        this.file(address(pause), address(plan), address(vat), bytes32("Line"), uint(20000 * 10 ** 45));
+        this.file(address(pause), address(govActions), address(vat), bytes32("Line"), uint(20000 * 10 ** 45));
         assertEq(vat.Line(), 20000 * 10 ** 45);
     }
 
     function testFile2() public {
         (,,, uint line,) = vat.ilks("ETH");
         assertEq(line, 10000 * 10 ** 45);
-        this.file(address(pause), address(plan), address(vat), bytes32("ETH"), bytes32("line"), uint(20000 * 10 ** 45));
+        this.file(address(pause), address(govActions), address(vat), bytes32("ETH"), bytes32("line"), uint(20000 * 10 ** 45));
         (,,, line,) = vat.ilks("ETH");
         assertEq(line, 20000 * 10 ** 45);
     }
 
-    function testChangeDelay() public {
+    function testsetDelay() public {
         assertEq(pause.delay(), 0);
-        this.changeDelay(address(pause), address(new ActionChangeDelay()), 5);
+        this.setDelay(address(pause), address(govActions), 5);
         assertEq(pause.delay(), 5);
     }
 }
