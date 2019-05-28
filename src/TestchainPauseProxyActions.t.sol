@@ -18,6 +18,10 @@ contract ProxyCalls {
         proxy.execute(proxyLib, msg.data);
     }
 
+    function setAuthority(address, address, address) public {
+        proxy.execute(proxyLib, msg.data);
+    }
+
     function setDelay(address, address, uint) public {
         proxy.execute(proxyLib, msg.data);
     }
@@ -47,9 +51,15 @@ contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
         assertEq(line, 20000 * 10 ** 45);
     }
 
-    function testsetDelay() public {
+    function testSetDelay() public {
         assertEq(pause.delay(), 0);
         this.setDelay(address(pause), address(govActions), 5);
         assertEq(pause.delay(), 5);
+    }
+
+    function testSetAuthority() public {
+        assertEq(address(pause.authority()), address(authority));
+        this.setAuthority(address(pause), address(govActions), address(123));
+        assertEq(address(pause.authority()), address(123));
     }
 }

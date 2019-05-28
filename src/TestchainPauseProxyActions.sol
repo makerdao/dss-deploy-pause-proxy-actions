@@ -33,6 +33,11 @@ contract TestchainPauseProxyActions {
         PauseLike(pause).exec(address(actions), abi.encodeWithSignature("file(address,bytes32,bytes32,uint256)", who, ilk, what, data), now);
     }
 
+    function setAuthority(address pause, address actions, address newAuthority) external {
+        PauseLike(pause).plot(address(actions), abi.encodeWithSignature("setAuthority(address,address)", pause, newAuthority), now);
+        PauseLike(pause).exec(address(actions), abi.encodeWithSignature("setAuthority(address,address)", pause, newAuthority), now);
+    }
+
     function setDelay(address pause, address actions, uint newDelay) external {
         PauseLike(pause).plot(address(actions), abi.encodeWithSignature("setDelay(address,uint256)", pause, newDelay), now);
         PauseLike(pause).exec(address(actions), abi.encodeWithSignature("setDelay(address,uint256)", pause, newDelay), now);
