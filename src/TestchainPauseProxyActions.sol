@@ -23,23 +23,18 @@ contract PauseLike {
 }
 
 contract TestchainPauseProxyActions {
-    function file(address pause, address actions, address who, bytes32 what, uint256 data) external {
+    function file(address pause, address actions, address who, bytes32 what, uint data) external {
         PauseLike(pause).plot(address(actions), abi.encodeWithSignature("file(address,bytes32,uint256)", who, what, data), now);
         PauseLike(pause).exec(address(actions), abi.encodeWithSignature("file(address,bytes32,uint256)", who, what, data), now);
     }
 
-    function file(address pause, address actions, address who, bytes32 ilk, bytes32 what, uint256 data) external {
+    function file(address pause, address actions, address who, bytes32 ilk, bytes32 what, uint data) external {
         PauseLike(pause).plot(address(actions), abi.encodeWithSignature("file(address,bytes32,bytes32,uint256)", who, ilk, what, data), now);
         PauseLike(pause).exec(address(actions), abi.encodeWithSignature("file(address,bytes32,bytes32,uint256)", who, ilk, what, data), now);
     }
 
-    function setAuthority(address pause, address actions, address newAuthority) external {
-        PauseLike(pause).plot(address(actions), abi.encodeWithSignature("setAuthority(address,address)", pause, newAuthority), now);
-        PauseLike(pause).exec(address(actions), abi.encodeWithSignature("setAuthority(address,address)", pause, newAuthority), now);
-    }
-
-    function setDelay(address pause, address actions, uint newDelay) external {
-        PauseLike(pause).plot(address(actions), abi.encodeWithSignature("setDelay(address,uint256)", pause, newDelay), now);
-        PauseLike(pause).exec(address(actions), abi.encodeWithSignature("setDelay(address,uint256)", pause, newDelay), now);
+    function setAuthorityAndDelay(address pause, address actions, address newAuthority, uint newDelay) external {
+        PauseLike(pause).plot(address(actions), abi.encodeWithSignature("setAuthorityAndDelay(address,address,uint256)", pause, newAuthority, newDelay), now);
+        PauseLike(pause).exec(address(actions), abi.encodeWithSignature("setAuthorityAndDelay(address,address,uint256)", pause, newAuthority, newDelay), now);
     }
 }
