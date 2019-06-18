@@ -57,6 +57,23 @@ contract TestchainPauseProxyActions {
         );
     }
 
+    function file(address pause, address actions, address who, bytes32 ilk, address data) external {
+        bytes32 tag;
+        assembly { tag := extcodehash(actions) }
+        PauseLike(pause).plot(
+            address(actions),
+            tag,
+            abi.encodeWithSignature("file(address,bytes32,address)", who, ilk, data),
+            now
+        );
+        PauseLike(pause).exec(
+            address(actions),
+            tag,
+            abi.encodeWithSignature("file(address,bytes32,address)", who, ilk, data),
+            now
+        );
+    }
+
     function setAuthorityAndDelay(address pause, address actions, address newAuthority, uint newDelay) external {
         bytes32 tag;
         assembly { tag := extcodehash(actions) }

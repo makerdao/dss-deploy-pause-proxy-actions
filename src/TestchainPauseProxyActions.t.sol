@@ -5,6 +5,7 @@ import "ds-test/test.sol";
 import "./TestchainPauseProxyActions.sol";
 import {DssDeployTestBase} from "dss-deploy/DssDeploy.t.base.sol";
 import {DSProxyFactory, DSProxy} from "ds-proxy/proxy.sol";
+import {PipLike} from "dss/spot.sol";
 
 contract ProxyCalls {
     DSProxy proxy;
@@ -15,6 +16,10 @@ contract ProxyCalls {
     }
 
     function file(address, address, address, bytes32, bytes32, uint) public {
+        proxy.execute(proxyLib, msg.data);
+    }
+
+    function file(address, address, address, bytes32, address) public {
         proxy.execute(proxyLib, msg.data);
     }
 
@@ -45,6 +50,14 @@ contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
         this.file(address(pause), address(govActions), address(vat), bytes32("ETH"), bytes32("line"), uint(20000 * 10 ** 45));
         (,,, line,) = vat.ilks("ETH");
         assertEq(line, 20000 * 10 ** 45);
+    }
+
+    function testFile3() public {
+        (PipLike pip,) = spotter.ilks("ETH");
+        assertEq(address(pip), address(pipETH));
+        this.file(address(pause), address(govActions), address(spotter), bytes32("ETH"), address(123));
+        (pip,) = spotter.ilks("ETH");
+        assertEq(address(pip), address(123));
     }
 
     function testSetAuthorityAndDelay() public {
