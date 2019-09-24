@@ -57,19 +57,19 @@ contract TestchainPauseProxyActions {
         );
     }
 
-    function file(address pause, address actions, address who, bytes32 ilk, address data) external {
+    function file(address pause, address actions, address who, bytes32 ilk, bytes32 what, address data) external {
         bytes32 tag;
         assembly { tag := extcodehash(actions) }
         PauseLike(pause).plot(
             address(actions),
             tag,
-            abi.encodeWithSignature("file(address,bytes32,address)", who, ilk, data),
+            abi.encodeWithSignature("file(address,bytes32,bytes32,address)", who, ilk, what, data),
             now
         );
         PauseLike(pause).exec(
             address(actions),
             tag,
-            abi.encodeWithSignature("file(address,bytes32,address)", who, ilk, data),
+            abi.encodeWithSignature("file(address,bytes32,bytes32,address)", who, ilk, what, data),
             now
         );
     }
