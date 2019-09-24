@@ -60,6 +60,20 @@ contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
         assertEq(address(pip), address(123));
     }
 
+    function testDripAndFile() public {
+        (uint duty,) = jug.ilks("ETH");
+        assertEq(duty, 10 ** 27);
+        this.file(address(pause), address(govActions), address(jug), bytes32("ETH"), bytes32("duty"), uint(2 * 10 ** 27));
+        (duty,) = jug.ilks("ETH");
+        assertEq(duty, 2 * 10 ** 27);
+    }
+
+    function testDripAndFile2() public {
+        assertEq(pot.dsr(), 10 ** 27);
+        this.file(address(pause), address(govActions), address(pot), bytes32("dsr"), uint(2 * 10 ** 27));
+        assertEq(pot.dsr(), 2 * 10 ** 27);
+    }
+
     function testSetAuthorityAndDelay() public {
         assertEq(address(pause.authority()), address(authority));
         assertEq(pause.delay(), 0);
