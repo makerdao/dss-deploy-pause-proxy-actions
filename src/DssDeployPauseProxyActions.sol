@@ -1,4 +1,4 @@
-/// TestchainPauseProxyActions.sol
+/// DssDeployPauseProxyActions.sol
 
 // Copyright (C) 2018 Gonzalo Balabasquer <gbalabasquer@gmail.com>
 //
@@ -22,7 +22,7 @@ contract PauseLike {
     function exec(address, bytes32, bytes memory, uint) public;
 }
 
-contract TestchainPauseProxyActions {
+contract DssDeployPauseProxyActions {
     function file(address pause, address actions, address who, bytes32 what, uint data) external {
         bytes32 tag;
         assembly { tag := extcodehash(actions) }

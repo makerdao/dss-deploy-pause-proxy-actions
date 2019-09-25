@@ -2,38 +2,38 @@ pragma solidity ^0.5.6;
 
 import "ds-test/test.sol";
 
-import "./TestchainPauseProxyActions.sol";
+import "./DssDeployPauseProxyActions.sol";
 import {DssDeployTestBase} from "dss-deploy/DssDeploy.t.base.sol";
 import {DSProxyFactory, DSProxy} from "ds-proxy/proxy.sol";
 import {PipLike} from "dss/spot.sol";
 
 contract ProxyCalls {
     DSProxy proxy;
-    address proxyLib;
+    address proxyActions;
 
     function file(address, address, address, bytes32, uint) public {
-        proxy.execute(proxyLib, msg.data);
+        proxy.execute(proxyActions, msg.data);
     }
 
     function file(address, address, address, bytes32, bytes32, uint) public {
-        proxy.execute(proxyLib, msg.data);
+        proxy.execute(proxyActions, msg.data);
     }
 
     function file(address, address, address, bytes32, bytes32, address) public {
-        proxy.execute(proxyLib, msg.data);
+        proxy.execute(proxyActions, msg.data);
     }
 
     function setAuthorityAndDelay(address, address, address, uint) public {
-        proxy.execute(proxyLib, msg.data);
+        proxy.execute(proxyActions, msg.data);
     }
 }
 
-contract TestchainPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
+contract DssDeployPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
     function setUp() public {
         super.setUp();
         deploy();
         DSProxyFactory factory = new DSProxyFactory();
-        proxyLib = address(new TestchainPauseProxyActions());
+        proxyActions = address(new DssDeployPauseProxyActions());
         proxy = DSProxy(factory.build());
         authority.setRootUser(address(proxy), true);
     }
