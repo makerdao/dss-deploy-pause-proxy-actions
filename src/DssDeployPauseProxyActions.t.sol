@@ -23,6 +23,10 @@ contract ProxyCalls {
         proxy.execute(proxyActions, msg.data);
     }
 
+    function rely(address, address, address, address) public {
+        proxy.execute(proxyActions, msg.data);
+    }
+
     function setAuthorityAndDelay(address, address, address, uint) public {
         proxy.execute(proxyActions, msg.data);
     }
@@ -58,6 +62,12 @@ contract DssDeployPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
         this.file(address(pause), address(govActions), address(spotter), bytes32("ETH"), bytes32("pip"), address(123));
         (pip,) = spotter.ilks("ETH");
         assertEq(address(pip), address(123));
+    }
+
+    function testRely() public {
+        assertEq(spotter.wards(address(123)), 0);
+        this.rely(address(pause), address(govActions), address(spotter), address(123));
+        assertEq(spotter.wards(address(123)), 1);
     }
 
     function testDripAndFile() public {
