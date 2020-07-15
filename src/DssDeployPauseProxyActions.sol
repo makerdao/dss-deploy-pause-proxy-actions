@@ -15,11 +15,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-pragma solidity ^0.5.12;
+pragma solidity >=0.5.12;
 
-contract PauseLike {
-    function plot(address, bytes32, bytes memory, uint) public;
-    function exec(address, bytes32, bytes memory, uint) public;
+interface PauseLike {
+    function plot(address, bytes32, bytes calldata, uint) external;
+    function exec(address, bytes32, bytes calldata, uint) external;
 }
 
 contract DssDeployPauseProxyActions {

@@ -1,4 +1,4 @@
-pragma solidity ^0.5.12;
+pragma solidity >=0.5.12;
 
 import "ds-test/test.sol";
 
@@ -39,7 +39,7 @@ contract DssDeployPauseProxyActionsTest is DssDeployTestBase, ProxyCalls {
         DSProxyFactory factory = new DSProxyFactory();
         proxyActions = address(new DssDeployPauseProxyActions());
         proxy = DSProxy(factory.build());
-        authority.setRootUser(address(proxy), true);
+        authority.permit(address(proxy), address(pause), bytes4(keccak256("plot(address,bytes32,bytes,uint256)")));
     }
 
     function testFile() public {
